@@ -10,7 +10,7 @@ func main() {
     http.HandleFunc("/users", getUsers)
 	fnt.Println("api is on :8080")
 
-	log.Fatal(http.ListenenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 type Users struct {
