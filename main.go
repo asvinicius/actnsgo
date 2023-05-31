@@ -23,6 +23,6 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content=Type", "application/json")
 	json.NewEncoder(w).Encode([]User{{
 		Id:   1,
-		Name: "Vinicius Anjos",
+		Name: "Vinicius Santos",
 	}})
 }
