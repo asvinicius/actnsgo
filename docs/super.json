@@ -1,0 +1,7 @@
+{
+    "super_id": "ObjectID",
+    "super_name": "string",
+    "super_login": "string",
+    "super_password": "string",
+    "super_status": "bool"
+}
