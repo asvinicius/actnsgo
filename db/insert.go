@@ -15,7 +15,7 @@ func Insert(collection string, data any) (primitive.ObjectID, error) {
 	response, err := c.InsertOne(context.Background(), data)
 
 	if err != nil {
-		return primitive.NewObjectID(), err
+		return primitive.NilObjectID, err
 	}
 
 	return response.InsertedID.(primitive.ObjectID), nil

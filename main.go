@@ -1,13 +1,15 @@
 package main
 
-import "github.com/gofiber/fiber/v3"
+import (
+	"github.com/asvinicius/actnsgo/super"
+	"github.com/gofiber/fiber/v3"
+)
 
 func main() {
 	app := fiber.New()
 
-	app.Get("/", func(c fiber.Ctx) error {
-		return c.SendString("Olá Mundo!")
-	})
+	api := app.Group("api")
+	super.SetRoutes(api)
 
-	app.Listen(":8080")
+	app.Listen(":9001")
 }
