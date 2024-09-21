@@ -8,7 +8,7 @@ import (
 func main() {
 	app := fiber.New()
 
-	api := app.Group("api")
+	api := app.Group("/api")
 	super.SetRoutes(api)
 
 	app.Listen(":9001")
