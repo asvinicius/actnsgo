@@ -1,9 +1,9 @@
 package super
 
-import "github.com/gofiber/fiber/v3"
+import "github.com/gofiber/fiber/v2"
 
 func SetRoutes(r fiber.Router) {
-	super := r.Group("/supers")
+	super := r.Group("/super")
 
-	super.Post("/", addSuper)
+	super.Post("/add/", addSuper)
 }

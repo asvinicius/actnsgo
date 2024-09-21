@@ -4,13 +4,13 @@ import (
 	"net/http"
 
 	"github.com/asvinicius/actnsgo/db"
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
-func addSuper(c fiber.Ctx) error {
+func addSuper(c *fiber.Ctx) error {
 	body := new(Super)
 
-	if err := c.Bind().Body(body); err != nil {
+	if err := c.BodyParser(body); err != nil {
 		return c.Status(http.StatusBadRequest).JSON("invalid json")
 	}
 
@@ -19,7 +19,7 @@ func addSuper(c fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).JSON(err.Error())
 	}
 
-	body.Super_id = id
+	body.ID = id
 
 	return c.Status(http.StatusCreated).JSON(body)
 }
