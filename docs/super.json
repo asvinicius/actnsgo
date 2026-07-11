@@ -1,7 +1,0 @@
-{
-    "_id": "ObjectID",
-    "name": "string",
-    "login": "string",
-    "password": "string",
-    "status": "bool"
-}
