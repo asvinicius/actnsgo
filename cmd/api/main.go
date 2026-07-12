@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/asvinicius/actnsgo/internal/config"
+	"github.com/asvinicius/actnsgo/internal/db"
 	"github.com/asvinicius/actnsgo/internal/routes"
 	"github.com/gofiber/fiber/v3"
 )
@@ -15,9 +16,17 @@ func main() {
 		log.Fatal(err)
 	}
 
+	pool, err := db.Connect(cfg)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_ = pool
+
 	app := fiber.New()
 
 	routes.Setup(app)
 
-	log.Fatal(app.Listen(":" + cfg.AppPort))
+	log.Fatal(app.Listen(":" + cfg.App.Port))
 }

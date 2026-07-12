@@ -7,9 +7,22 @@ import (
 )
 
 type Config struct {
-	AppName string
-	AppPort string
-	AppEnv  string
+	App AppConfig
+	DB  DatabaseConfig
+}
+
+type AppConfig struct {
+	Name string
+	Port string
+	Env  string
+}
+
+type DatabaseConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Name     string
 }
 
 func Load() (Config, error) {
@@ -21,9 +34,18 @@ func Load() (Config, error) {
 	}
 
 	cfg := Config{
-		AppName: os.Getenv("APP_NAME"),
-		AppPort: os.Getenv("APP_PORT"),
-		AppEnv:  os.Getenv("APP_ENV"),
+		App: AppConfig{
+			Name: os.Getenv("APP_NAME"),
+			Port: os.Getenv("APP_PORT"),
+			Env:  os.Getenv("APP_ENV"),
+		},
+		DB: DatabaseConfig{
+			Host:     os.Getenv("DB_HOST"),
+			Port:     os.Getenv("DB_PORT"),
+			User:     os.Getenv("DB_USER"),
+			Password: os.Getenv("DB_PASSWORD"),
+			Name:     os.Getenv("DB_NAME"),
+		},
 	}
 
 	return cfg, nil
