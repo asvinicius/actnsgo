@@ -22,11 +22,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_ = pool
-
 	app := fiber.New()
 
-	routes.Setup(app)
+	routes.RegisterRoutes(app, pool)
 
 	log.Fatal(app.Listen(":" + cfg.App.Port))
 }

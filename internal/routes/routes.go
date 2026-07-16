@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type HealthResponse struct {
@@ -18,4 +19,8 @@ func Setup(app *fiber.App) {
 
 		return c.JSON(response)
 	})
+}
+
+func RegisterRoutes(app *fiber.App, pool *pgxpool.Pool) {
+	AuthRoutes(app, pool)
 }

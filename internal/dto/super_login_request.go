@@ -1,4 +1,4 @@
-package auth
+package dto
 
 type SuperLoginRequest struct {
 	SuperLogin    string `json:"super_login"`
