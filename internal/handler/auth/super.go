@@ -27,7 +27,7 @@ func (h *AuthHandler) Login(c fiber.Ctx) error {
 		})
 	}
 
-	super, err := h.authService.Authenticate(req.SuperLogin, req.SuperPassword)
+	super, token, err := h.authService.Authenticate(req.SuperLogin, req.SuperPassword)
 
 	if errors.Is(err, auth.ErrSuperNotActive) {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
@@ -51,7 +51,7 @@ func (h *AuthHandler) Login(c fiber.Ctx) error {
 		SuperID:    super.SuperID,
 		SuperName:  super.SuperName,
 		SuperLogin: super.SuperLogin,
-		Token:      "",
+		Token:      token,
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response)

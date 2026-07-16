@@ -9,6 +9,7 @@ import (
 type Config struct {
 	App AppConfig
 	DB  DatabaseConfig
+	JWT JWTConfig
 }
 
 type AppConfig struct {
@@ -23,6 +24,11 @@ type DatabaseConfig struct {
 	User     string
 	Password string
 	Name     string
+}
+
+type JWTConfig struct {
+	Secret     string
+	Expiration string
 }
 
 func Load() (Config, error) {
@@ -45,6 +51,10 @@ func Load() (Config, error) {
 			User:     os.Getenv("DB_USER"),
 			Password: os.Getenv("DB_PASSWORD"),
 			Name:     os.Getenv("DB_NAME"),
+		},
+		JWT: JWTConfig{
+			Secret:     os.Getenv("JWT_SECRET"),
+			Expiration: os.Getenv("JWT_EXPIRATION"),
 		},
 	}
 

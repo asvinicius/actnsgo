@@ -24,7 +24,9 @@ func main() {
 
 	app := fiber.New()
 
-	routes.RegisterRoutes(app, pool)
+	if err := routes.RegisterRoutes(app, pool, cfg); err != nil {
+		log.Fatal(err)
+	}
 
 	log.Fatal(app.Listen(":" + cfg.App.Port))
 }
