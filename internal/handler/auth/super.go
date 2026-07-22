@@ -2,7 +2,7 @@ package auth
 
 import (
 	"errors"
-
+	"strings"
 	"github.com/asvinicius/actnsgo/internal/dto"
 	"github.com/asvinicius/actnsgo/internal/service/auth"
 	"github.com/gofiber/fiber/v3"
@@ -56,4 +56,36 @@ func (h *AuthHandler) Login(c fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(response)
 
+}
+
+func (h *AuthHandler) IsLogged(c fiber.Ctx) error {
+    authorization := c.Get("Authorization")
+
+    if authorization == "" {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+            "error": "token não informado",
+        })
+    }
+
+    const bearerPrefix = "Bearer "
+
+    if !strings.HasPrefix(authorization, bearerPrefix) {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+            "error": "token inválido",
+        })
+    }
+
+    tokenString := strings.TrimPrefix(authorization, bearerPrefix)
+
+    _, err := h.authService.IsValidSession(tokenString)
+
+    if err != nil {
+        return c.Status(fiber.StatusUnauthorized).JSON(dto.SuperTokenValidation{
+            Valid: false,
+        })
+    }
+
+    return c.JSON(dto.SuperTokenValidation{
+        Valid: true,
+    })
 }

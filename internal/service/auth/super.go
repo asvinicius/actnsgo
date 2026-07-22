@@ -6,11 +6,13 @@ import (
 	"github.com/asvinicius/actnsgo/internal/model"
 	"github.com/asvinicius/actnsgo/internal/repository"
 	"github.com/asvinicius/actnsgo/internal/service/token"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
 var ErrSuperNotActive = errors.New("super not active")
 var ErrInvalidCredentials = errors.New("invalid credentials")
+var ErrInvalidUserType = errors.New("invalid user type")
 
 type AuthService struct {
 	superRepository *repository.SuperRepository
@@ -47,4 +49,19 @@ func (s *AuthService) Authenticate(superLogin, superPassword string) (*model.Use
 	}
 
 	return super, token, nil
+}
+
+func (s *AuthService) IsValidSession(tokenString string) (jwt.MapClaims, error){
+
+	claims, err := s.tokenService.ValidateToken(tokenString)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if claims["type"] != "super" {
+        return nil, ErrInvalidUserType
+    }
+
+    return claims, nil
 }

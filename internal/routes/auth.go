@@ -26,6 +26,7 @@ func AuthRoutes(app *fiber.App, pool *pgxpool.Pool, cfg config.Config) error {
 	hand := authhandler.NewAuthHandler(serv)
 
 	app.Post("/api/v1/auth/super/login", hand.Login)
+	app.Get("/api/v1/auth/super/islogged", hand.IsLogged)
 
 	return nil
 }
