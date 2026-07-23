@@ -9,7 +9,3 @@ export function getToken() {
 export function removeToken() {
     localStorage.removeItem('token');
 }
-
-export function hasToken() {
-    return localStorage.getItem("token") !== null;
-}

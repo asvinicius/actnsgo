@@ -44,7 +44,7 @@
     ======================================================== -->
 </head>
 
-<body>
+<body data-page="login">
   <div class="fauth">
     <main class="fauth-main">
       <div class="fauth-main-inner">
@@ -61,9 +61,9 @@
           </div>
 
           <form class="fauth-form" id="login_form" novalidate>
-            <div class="alert alert-danger" role="alert">
-              A simple danger alert—check it out!
-            </div>
+            
+            <div class="alert alert-danger d-none" role="alert" id="login_alert"> </div>
+
             <div class="fauth-field">
               <label for="super_login" class="form-label">Login</label>
               <input type="text" class="form-control" id="super_login" name="super_login" placeholder="Login" required>
@@ -71,7 +71,8 @@
 
             <div class="fauth-field">
               <label for="super_password" class="form-label">Senha</label>
-              <input type="password" class="form-control" id="super_password" name="super_password" placeholder="Senha" required>
+              <input type="password" class="form-control" id="super_password" name="super_password" placeholder="Senha"
+                required>
             </div>
 
             <button type="submit" id="btn_login" class="btn btn-primary w-100">Entrar</button>
@@ -86,6 +87,7 @@
     </main>
   </div>
   <!-- Auth files -->
+  <script type="module" src="assets/js/auth/guard.js"></script>
   <script type="module" src="assets/js/auth/login.js"></script>
 
   <!-- Vendor JS Files -->
