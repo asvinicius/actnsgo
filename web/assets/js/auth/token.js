@@ -1,11 +1,15 @@
-export function saveToken(token) {
-    localStorage.setItem('token', token);
+export function saveAuthData(data) {
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('superName', data.super_name);
+    localStorage.setItem('superId', data.super_id);
 }
 
 export function getToken() {
     return localStorage.getItem('token');
 }
 
-export function removeToken() {
+export function clearAuthData() {
     localStorage.removeItem('token');
+    localStorage.removeItem('superName');
+    localStorage.removeItem('superId');
 }

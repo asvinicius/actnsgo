@@ -1,4 +1,4 @@
-import { getToken, removeToken } from "./token.js";
+import { getToken, clearAuthData } from "./token.js";
 
 async function isLogged() {
 
@@ -21,7 +21,7 @@ async function isLogged() {
         });
 
         if (!response.ok) {
-            removeToken();
+            clearAuthData();
             window.location.replace("/login.html");
             return;
         }
@@ -29,7 +29,7 @@ async function isLogged() {
         const data = await response.json();
 
         if (!data.valid) {
-            removeToken();
+            clearAuthData();
             window.location.replace("/login.html");
             return;
         }
@@ -60,13 +60,6 @@ async function loadHome() {
             }
         });
 
-        /*
-        if (response.ok) {
-            window.location.replace("/home.html");
-            return;
-        }
-        */
-
         const data = await response.json();
 
         if (data.valid) {
@@ -84,6 +77,7 @@ async function loadHome() {
 const page = document.body.dataset.page;
 
 if(page){
+    console.log(page);
     switch (page) {
         case "login":
             loadHome();

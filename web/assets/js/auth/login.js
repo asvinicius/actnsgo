@@ -1,4 +1,4 @@
-import { saveToken, getToken, removeToken } from "./token.js";
+import { saveAuthData, getToken, clearAuthData } from "./token.js";
 
 async function login(event) {
     event.preventDefault();
@@ -34,7 +34,7 @@ async function login(event) {
         }
 
         // console.log(data);
-        saveToken(data.token);
+        saveAuthData(data);
         window.location.replace("/home.html");
 
     } catch (err) {
@@ -51,6 +51,6 @@ export function logout(event) {
         event.preventDefault();
     }
 
-    removeToken();
+    clearAuthData();
     window.location.replace("/login.html");
 }
