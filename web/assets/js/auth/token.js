@@ -8,6 +8,10 @@ export function getToken() {
     return localStorage.getItem('token');
 }
 
+export function getSuperName() {
+    return localStorage.getItem('superName');
+}
+
 export function clearAuthData() {
     localStorage.removeItem('token');
     localStorage.removeItem('superName');
