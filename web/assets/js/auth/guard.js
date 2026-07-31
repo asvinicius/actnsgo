@@ -5,7 +5,7 @@ async function isLogged() {
     const token = getToken();
 
     if (!token) {
-        window.location.replace("/login.html");
+        window.location.replace("/pages/super/login.html");
         return;
     }
 
@@ -22,7 +22,7 @@ async function isLogged() {
 
         if (!response.ok) {
             clearAuthData();
-            window.location.replace("/login.html");
+            window.location.replace("/pages/super/login.html");
             return;
         }
 
@@ -30,7 +30,7 @@ async function isLogged() {
 
         if (!data.valid) {
             clearAuthData();
-            window.location.replace("/login.html");
+            window.location.replace("/pages/super/login.html");
             return;
         }
 
@@ -63,7 +63,7 @@ async function loadHome() {
         const data = await response.json();
 
         if (data.valid) {
-            window.location.replace("/home.html");
+            window.location.replace("/pages/super/home.html");
             return;
         }
 
@@ -77,7 +77,6 @@ async function loadHome() {
 const page = document.body.dataset.page;
 
 if(page){
-    console.log(page);
     switch (page) {
         case "login":
             loadHome();

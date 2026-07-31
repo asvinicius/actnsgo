@@ -13,3 +13,11 @@ export function clearAuthData() {
     localStorage.removeItem('superName');
     localStorage.removeItem('superId');
 }
+
+export function logout(event) {
+    if (event) {
+        event.preventDefault();
+    }
+    clearAuthData();
+    window.location.replace("/pages/super/login.html");
+}

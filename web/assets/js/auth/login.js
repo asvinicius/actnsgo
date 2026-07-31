@@ -35,7 +35,7 @@ async function login(event) {
 
         // console.log(data);
         saveAuthData(data);
-        window.location.replace("/home.html");
+        window.location.replace("/pages/super/home.html");
 
     } catch (err) {
         console.error(err);
@@ -45,12 +45,3 @@ async function login(event) {
 const form = document.getElementById("login_form");
 
 form.addEventListener("submit", login);
-
-export function logout(event) {
-    if (event) {
-        event.preventDefault();
-    }
-
-    clearAuthData();
-    window.location.replace("/login.html");
-}
