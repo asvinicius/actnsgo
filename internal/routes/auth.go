@@ -10,17 +10,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func AuthRoutes(app *fiber.App, pool *pgxpool.Pool, cfg config.Config) error {
-
-	tokenService, err := token.NewTokenService(
-		cfg.JWT.Secret,
-		cfg.JWT.Expiration,
-	)
-
-	if err != nil {
-		return err
-	}
-
+func AuthRoutes(app *fiber.App, pool *pgxpool.Pool, cfg config.Config, tokenService *token.TokenService) error {
 	rep := repository.NewSuperRepository(pool)
 	serv := authservice.NewAuthService(rep, tokenService)
 	hand := authhandler.NewAuthHandler(serv)
