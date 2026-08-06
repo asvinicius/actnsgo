@@ -7,9 +7,10 @@ import (
 )
 
 type Config struct {
-	App AppConfig
-	DB  DatabaseConfig
-	JWT JWTConfig
+	App     AppConfig
+	DB      DatabaseConfig
+	JWT     JWTConfig
+	Cartola CartolaConfig
 }
 
 type AppConfig struct {
@@ -29,6 +30,10 @@ type DatabaseConfig struct {
 type JWTConfig struct {
 	Secret     string
 	Expiration string
+}
+
+type CartolaConfig struct {
+	CartolaURL string
 }
 
 func Load() (Config, error) {
@@ -55,6 +60,9 @@ func Load() (Config, error) {
 		JWT: JWTConfig{
 			Secret:     os.Getenv("JWT_SECRET"),
 			Expiration: os.Getenv("JWT_EXPIRATION"),
+		},
+		Cartola: CartolaConfig{
+			CartolaURL: os.Getenv("CARTOLA_BASE_URL"),
 		},
 	}
 

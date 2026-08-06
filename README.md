@@ -1,6 +1,5 @@
-# Projeto de API/REST com GOLANG
+# ACTNSGO
 
-Este projeto irá evoluindo conforme os conhecimentos da linguagem, por parte do dono do repositório, for evoluindo também;
+ACTNSGO é um projeto de API/REST para gerenciamento de ligas de `Cartola FC`.
 
-O projeto consistirá em um sistema para controle de competições organizadas com base no Fantasygame Cartola;
-Esse sistema permitirá o gerenciamento de usuários, times e competições, devendo também ser responsável por gerar parciais automáticas durante a rodada e realizar atualização automática da base de dados ao final da rodada;
+- **Objetivo:** Oferecer um backend com todo o gerenciamento de usuários, ligas e parciais das rodadas, além de informações para o site público, tudo isso com banco de dados, conexão com a API do Cartola e automações.
