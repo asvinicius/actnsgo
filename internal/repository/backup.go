@@ -17,6 +17,39 @@ func NewBackupRepository(pool *pgxpool.Pool) *BackupRepository {
 	}
 }
 
+func (r *BackupRepository) Insert(b model.Backup) (int64, error) {
+	query := `
+		INSERT INTO backup (
+			backup_file,
+			backup_path,
+			backup_size,
+			backup_trigger,
+			backup_status,
+			backup_error_message,
+			backup_created_at
+		) VALUES ($1, $2, $3, $4, $5, $6, $7)
+		RETURNING backup_id
+	`
+
+	var backupID int64
+
+	err := r.pool.QueryRow(context.Background(), query,
+		b.BackupFile,
+		b.BackupPath,
+		b.BackupSize,
+		b.BackupTrigger,
+		b.BackupStatus,
+		b.BackupErrorMessage,
+		b.BackupCreatedAt,
+	).Scan(&backupID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return backupID, nil
+}
+
 func (r *BackupRepository) Listing() ([]model.Backup, error) {
 
 	query := `

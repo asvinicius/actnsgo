@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/asvinicius/actnsgo/internal/client"
 	"github.com/asvinicius/actnsgo/internal/config"
 	"github.com/asvinicius/actnsgo/internal/db"
 	"github.com/asvinicius/actnsgo/internal/repository"
@@ -25,7 +26,8 @@ func main() {
 	defer pool.Close()
 
 	msrepo := repository.NewMarketStatusRepository(pool)
-	mss := marketstatus.NewMarketStatusService(msrepo)
+	mscli := client.NewClient(cfg.Cartola.CartolaURL)
+	mss := marketstatus.NewMarketStatusService(msrepo, mscli)
 
 	closed, err := mss.HasMarketClosed()
 
