@@ -1,6 +1,8 @@
 package marketstatus
 
 import (
+	"time"
+
 	"github.com/asvinicius/actnsgo/internal/client"
 	"github.com/asvinicius/actnsgo/internal/model"
 	"github.com/asvinicius/actnsgo/internal/repository"
@@ -49,4 +51,38 @@ func (mss *MarketStatusService) HasMarketClosed() (bool, error) {
 	}
 
 	return true, nil
+}
+
+func (mss *MarketStatusService) SyncStatus() error {
+
+	current, err := mss.GetStatus()
+
+	if err != nil {
+		return err
+	}
+
+	apistatus, err := mss.statusClient.GetStatus()
+
+	if err != nil {
+		return err
+	}
+
+	updated := model.MarketStatus{
+		MsID:                current.MsID,
+		MsStatus:            apistatus.MarketStatus,
+		MsCurrentRound:      apistatus.CurrentRound,
+		MsCurrentMonth:      current.MsCurrentMonth,
+		MsCurrentSeason:     apistatus.Season,
+		MsShutdownDay:       apistatus.Shutdown.Day,
+		MsShutdownMonth:     apistatus.Shutdown.Month,
+		MsShutdownYear:      apistatus.Shutdown.Year,
+		MsShutdownHour:      apistatus.Shutdown.Hour,
+		MsShutdownMinute:    apistatus.Shutdown.Minute,
+		MsShutdownTimestamp: time.Unix(apistatus.Shutdown.Timestamp, 0),
+		MsPostRound:         apistatus.PostRound,
+		MsNewMonth:          apistatus.NewMonth,
+		MsRunning:           apistatus.Running,
+	}
+
+	return mss.UpdateStatus(updated)
 }

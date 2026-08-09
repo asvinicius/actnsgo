@@ -2,6 +2,7 @@ package backup
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"time"
@@ -29,6 +30,10 @@ func NewBackupService(backupRepository *repository.BackupRepository) *BackupServ
 }
 
 func (bs *BackupService) RunBackup(trigger string, dbConfig DBConfig, backupDir string) (*model.Backup, error) {
+	if err := os.MkdirAll(backupDir, os.ModePerm); err != nil {
+		return nil, err
+	}
+
 	timestamp := time.Now().Format("2006-01-02_15-04-05")
 	fileName := fmt.Sprintf("backup_%s.sql", timestamp)
 	filePath := fmt.Sprintf("%s/%s", backupDir, fileName)
@@ -51,6 +56,8 @@ func (bs *BackupService) RunBackup(trigger string, dbConfig DBConfig, backupDir 
 		msg := string(output)
 		errorMessage = &msg
 		status = "failed"
+
+		log.Printf("erro pg_dump: %s", msg) // temporário, pra debug
 	}
 
 	var sizeBytes int64
@@ -69,6 +76,7 @@ func (bs *BackupService) RunBackup(trigger string, dbConfig DBConfig, backupDir 
 	}
 
 	backupID, err := bs.backupRepository.Insert(backup)
+
 	if err != nil {
 		return nil, err
 	}

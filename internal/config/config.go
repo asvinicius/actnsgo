@@ -11,6 +11,7 @@ type Config struct {
 	DB      DatabaseConfig
 	JWT     JWTConfig
 	Cartola CartolaConfig
+	Backup  BackupConfig
 }
 
 type AppConfig struct {
@@ -34,6 +35,10 @@ type JWTConfig struct {
 
 type CartolaConfig struct {
 	CartolaURL string
+}
+
+type BackupConfig struct {
+	Dir string
 }
 
 func Load() (Config, error) {
@@ -63,6 +68,9 @@ func Load() (Config, error) {
 		},
 		Cartola: CartolaConfig{
 			CartolaURL: os.Getenv("CARTOLA_BASE_URL"),
+		},
+		Backup: BackupConfig{
+			Dir: os.Getenv("BACKUP_DIR"),
 		},
 	}
 
