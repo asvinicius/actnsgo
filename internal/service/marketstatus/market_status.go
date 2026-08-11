@@ -6,6 +6,7 @@ import (
 	"github.com/asvinicius/actnsgo/internal/client"
 	"github.com/asvinicius/actnsgo/internal/model"
 	"github.com/asvinicius/actnsgo/internal/repository"
+	"github.com/asvinicius/actnsgo/internal/response"
 )
 
 type MarketStatusService struct {
@@ -28,29 +29,68 @@ func (mss *MarketStatusService) UpdateStatus(ms model.MarketStatus) error {
 	return mss.marketStatusRepository.UpdateStatus(ms)
 }
 
+const marketStatusClosed = 2
+
 func (mss *MarketStatusService) HasMarketClosed() (bool, error) {
 
-	marketstatus, err := mss.GetStatus()
+	marketstatus, apistatus, err := mss.fetchBothStatus()
 
 	if err != nil {
 		return false, err
 	}
 
-	apistatus, err := mss.statusClient.GetStatus()
-
-	if err != nil {
-		return false, err
-	}
-
-	if marketstatus.MsCurrentRound != apistatus.CurrentRound {
+	if apistatus.MarketStatus != marketStatusClosed {
 		return false, nil
 	}
 
-	if marketstatus.MsStatus == apistatus.MarketStatus {
+	if apistatus.CurrentRound != marketstatus.MsCurrentRound {
+		return false, nil
+	}
+
+	if apistatus.MarketStatus == marketstatus.MsStatus {
 		return false, nil
 	}
 
 	return true, nil
+}
+
+const marketStatusOpened = 1
+
+func (mss *MarketStatusService) HasMarketOpened() (bool, error) {
+
+	marketstatus, apistatus, err := mss.fetchBothStatus()
+
+	if err != nil {
+		return false, err
+	}
+
+	if apistatus.MarketStatus != marketStatusOpened {
+		return false, nil
+	}
+
+	if apistatus.CurrentRound == marketstatus.MsCurrentRound {
+		return false, nil
+	}
+
+	if apistatus.MarketStatus == marketstatus.MsStatus {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func (mss *MarketStatusService) fetchBothStatus() (*model.MarketStatus, *response.StatusResponse, error) {
+	marketstatus, err := mss.GetStatus()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	apistatus, err := mss.statusClient.GetStatus()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return marketstatus, apistatus, nil
 }
 
 func (mss *MarketStatusService) SyncStatus() error {
