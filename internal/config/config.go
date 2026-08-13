@@ -12,6 +12,7 @@ type Config struct {
 	JWT     JWTConfig
 	Cartola CartolaConfig
 	Backup  BackupConfig
+	Upload  UploadConfig
 }
 
 type AppConfig struct {
@@ -39,6 +40,11 @@ type CartolaConfig struct {
 
 type BackupConfig struct {
 	Dir string
+}
+
+type UploadConfig struct {
+	BankLogoDir   string
+	AttachmentDir string
 }
 
 func Load() (Config, error) {
@@ -71,6 +77,10 @@ func Load() (Config, error) {
 		},
 		Backup: BackupConfig{
 			Dir: os.Getenv("BACKUP_DIR"),
+		},
+		Upload: UploadConfig{
+			BankLogoDir:   os.Getenv("UPLOAD_BANK_LOGO_DIR"),
+			AttachmentDir: os.Getenv("ATTACHMENT_DIR"),
 		},
 	}
 
