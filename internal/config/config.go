@@ -79,7 +79,7 @@ func Load() (Config, error) {
 			Dir: os.Getenv("BACKUP_DIR"),
 		},
 		Upload: UploadConfig{
-			BankLogoDir:   os.Getenv("UPLOAD_BANK_LOGO_DIR"),
+			BankLogoDir:   os.Getenv("BANK_LOGO_DIR"),
 			AttachmentDir: os.Getenv("ATTACHMENT_DIR"),
 		},
 	}

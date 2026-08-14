@@ -42,6 +42,7 @@ func (bh *BankHandler) Create(c fiber.Ctx) error {
 		ext := filepath.Ext(file.Filename)
 		fileName := fmt.Sprintf("bank_%d%s", time.Now().UnixNano(), ext)
 		fullPath := filepath.Join(bh.uploadDir, fileName)
+		publicPath := "/uploads/banks/" + fileName
 
 		if err := c.SaveFile(file, fullPath); err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -49,7 +50,7 @@ func (bh *BankHandler) Create(c fiber.Ctx) error {
 			})
 		}
 
-		logoPath = &fullPath
+		logoPath = &publicPath
 	}
 
 	bank := model.Bank{
