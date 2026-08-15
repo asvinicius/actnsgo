@@ -16,6 +16,8 @@ func BankRoutes(router fiber.Router, pool *pgxpool.Pool, cfg config.Config) erro
 
 	router.Post("/bank/create", hand.Create)
 	router.Get("/bank/listing", hand.Listing)
+	router.Put("/bank/update/:id", hand.Update)
+	router.Delete("/bank/delete/:id", hand.Delete)
 
 	return nil
 }

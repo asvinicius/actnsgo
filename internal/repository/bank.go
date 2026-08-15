@@ -2,8 +2,10 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/asvinicius/actnsgo/internal/model"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -39,6 +41,89 @@ func (r *BankRepository) Insert(b model.Bank) (int64, error) {
 	}
 
 	return bankID, nil
+}
+
+func (r *BankRepository) GetByID(bankID int64) (*model.Bank, error) {
+
+	var bank model.Bank
+
+	query := `
+		SELECT
+			bank_id,
+			bank_name,
+			bank_logo,
+			bank_status
+		FROM bank
+		WHERE bank_id = $1
+	`
+
+	row := r.pool.QueryRow(context.Background(), query, bankID)
+
+	err := row.Scan(
+		&bank.BankID,
+		&bank.BankName,
+		&bank.BankLogo,
+		&bank.BankStatus,
+	)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, ErrSuperNotFound
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &bank, nil
+}
+
+var ErrBankNotFound = errors.New("bank not found")
+
+func (r *BankRepository) Update(b model.Bank) error {
+	query := `
+		UPDATE bank
+		SET
+			bank_name = $2,
+			bank_logo = $3,
+			bank_status = $4
+		WHERE bank_id = $1
+	`
+
+	cmdTag, err := r.pool.Exec(context.Background(), query,
+		b.BankID,
+		b.BankName,
+		b.BankLogo,
+		b.BankStatus,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if cmdTag.RowsAffected() == 0 {
+		return ErrBankNotFound
+	}
+
+	return nil
+}
+
+func (r *BankRepository) Delete(bankID int64) error {
+	query := `
+		DELETE FROM bank
+		WHERE bank_id = $1
+	`
+
+	cmdTag, err := r.pool.Exec(context.Background(), query, bankID)
+
+	if err != nil {
+		return err
+	}
+
+	if cmdTag.RowsAffected() == 0 {
+		return ErrBankNotFound
+	}
+
+	return nil
 }
 
 func (r *BankRepository) Listing() ([]model.Bank, error) {
