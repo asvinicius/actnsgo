@@ -67,3 +67,19 @@ func (s *TokenService) ValidateToken(tokenString string) (jwt.MapClaims, error) 
 
 	return claims, nil
 }
+
+func (s *TokenService) ValidateRole(tokenString string, role string) (jwt.MapClaims, error) {
+	claims, err := s.ValidateToken(tokenString)
+
+	if err != nil {
+		return nil, err
+	}
+
+	roletype, ok := claims["type"].(string)
+
+	if !ok || roletype != role {
+		return nil, errors.New("token não autorizado para este recurso")
+	}
+
+	return claims, nil
+}

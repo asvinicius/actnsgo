@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-func RequireAuth(ts *token.TokenService) fiber.Handler {
+func RequireAuth(ts *token.TokenService, role string) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		authorization := c.Get("Authorization")
 
@@ -27,7 +27,7 @@ func RequireAuth(ts *token.TokenService) fiber.Handler {
 
 		tokenString := strings.TrimPrefix(authorization, bearerPrefix)
 
-		claims, err := ts.ValidateToken(tokenString)
+		claims, err := ts.ValidateRole(tokenString, role)
 
 		if err != nil {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
