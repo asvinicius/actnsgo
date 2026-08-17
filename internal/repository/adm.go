@@ -99,7 +99,7 @@ func (r *AdmRepository) Delete(admID int64) error {
 	return nil
 }
 
-func (r *AdmRepository) FindByID(admID int64) (*model.UserAdm, error) {
+func (r *AdmRepository) GetByID(admID int64) (*model.UserAdm, error) {
 	var adm model.UserAdm
 
 	query := `

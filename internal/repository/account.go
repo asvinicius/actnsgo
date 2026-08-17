@@ -76,6 +76,23 @@ func (r *AccountRepository) Update(a model.Account) error {
 	return nil
 }
 
+func (r *AccountRepository) DeactivateAllByAdm(admID int64) error {
+	query := `
+		UPDATE account
+		SET account_status = false
+		WHERE account_adm = $1
+		AND account_status = true
+	`
+
+	_, err := r.pool.Exec(context.Background(), query, admID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *AccountRepository) Delete(accountID int64) error {
 	query := `
 		DELETE FROM account
@@ -95,17 +112,19 @@ func (r *AccountRepository) Delete(accountID int64) error {
 	return nil
 }
 
-func (r *AccountRepository) FindByID(accountID int64) (*model.Account, error) {
-	var account model.Account
+func (r *AccountRepository) GetByID(accountID int64) (*model.AccountWithBank, error) {
+	var account model.AccountWithBank
 
 	query := `
 		SELECT
-			account_id,
-			account_bank,
-			account_key,
-			account_status
+			account.account_id,
+			account.account_bank,
+			account.account_key,
+			account.account_status,
+			bank.bank_name
 		FROM account
-		WHERE account_id = $1
+		JOIN bank ON bank.bank_id = account_bank
+		WHERE account.account_id = $1
 	`
 
 	row := r.pool.QueryRow(context.Background(), query, accountID)
@@ -115,6 +134,7 @@ func (r *AccountRepository) FindByID(accountID int64) (*model.Account, error) {
 		&account.AccountBank,
 		&account.AccountKey,
 		&account.AccountStatus,
+		&account.BankName,
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
