@@ -29,6 +29,13 @@ func RegisterRoutes(app *fiber.App, pool *pgxpool.Pool, cfg config.Config) error
 
 	protected := app.Group("/api/v1", middleware.RequireAuth(tokenService, "super"))
 
+	if err := AdmRoutes(protected, pool, cfg); err != nil {
+		return err
+	}
+	if err := AccountRoutes(protected, pool, cfg); err != nil {
+		return err
+	}
+
 	if err := BankRoutes(protected, pool, cfg); err != nil {
 		return err
 	}
