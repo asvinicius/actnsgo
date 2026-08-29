@@ -41,7 +41,7 @@ func (as *AccountService) Delete(accountID int64) error {
 	return as.accountRepository.Delete(accountID)
 }
 
-func (as *AccountService) GetByID(accountID int64) (*model.AccountWithBank, error) {
+func (as *AccountService) GetByID(accountID int64) (*model.Account, error) {
 	return as.accountRepository.GetByID(accountID)
 }
 

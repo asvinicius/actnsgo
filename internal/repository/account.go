@@ -112,16 +112,16 @@ func (r *AccountRepository) Delete(accountID int64) error {
 	return nil
 }
 
-func (r *AccountRepository) GetByID(accountID int64) (*model.AccountWithBank, error) {
-	var account model.AccountWithBank
+func (r *AccountRepository) GetByID(accountID int64) (*model.Account, error) {
+	var account model.Account
 
 	query := `
 		SELECT
 			account.account_id,
+			account.account_adm,
 			account.account_bank,
 			account.account_key,
 			account.account_status,
-			bank.bank_name
 		FROM account
 		JOIN bank ON bank.bank_id = account_bank
 		WHERE account.account_id = $1
@@ -131,10 +131,10 @@ func (r *AccountRepository) GetByID(accountID int64) (*model.AccountWithBank, er
 
 	err := row.Scan(
 		&account.AccountID,
+		&account.AccountAdm,
 		&account.AccountBank,
 		&account.AccountKey,
 		&account.AccountStatus,
-		&account.BankName,
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
