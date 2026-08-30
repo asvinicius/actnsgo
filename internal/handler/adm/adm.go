@@ -23,10 +23,12 @@ func NewAdmHandler(admService *admservice.AdmService) *AdmHandler {
 }
 
 func (ah *AdmHandler) Create(c fiber.Ctx) error {
-	request := dto.AdmRequest{
-		AdmName:     c.FormValue("adm_name"),
-		AdmLogin:    c.FormValue("adm_login"),
-		AdmPassword: c.FormValue("adm_password"),
+	var request dto.AdmRequest
+
+	if err := c.Bind().Body(&request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "dados inválidos",
+		})
 	}
 
 	if request.AdmName == "" {
@@ -35,10 +37,16 @@ func (ah *AdmHandler) Create(c fiber.Ctx) error {
 		})
 	}
 
+	if request.AdmLogin == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "login do administrador é obrigatorio",
+		})
+	}
+
 	adm := model.UserAdm{
 		AdmName:      request.AdmName,
 		AdmLogin:     request.AdmLogin,
-		AdmPassword:  request.AdmPassword,
+		AdmPassword:  request.AdmLogin,
 		AdmStatus:    true,
 		AdmCreatedAt: time.Now(),
 	}

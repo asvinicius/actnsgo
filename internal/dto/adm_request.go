@@ -1,9 +1,8 @@
 package dto
 
 type AdmRequest struct {
-	AdmName     string `json:"adm_name"`
-	AdmLogin    string `json:"adm_login"`
-	AdmPassword string `json:"adm_password"`
+	AdmName  string `json:"adm_name"`
+	AdmLogin string `json:"adm_login"`
 }
 
 type AdmUpdateRequest struct {
