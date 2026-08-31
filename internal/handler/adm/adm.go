@@ -65,6 +65,26 @@ func (ah *AdmHandler) Create(c fiber.Ctx) error {
 }
 
 func (ah *AdmHandler) Update(c fiber.Ctx) error {
+	var request dto.AdmUpdateRequest
+
+	if err := c.Bind().Body(&request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "dados inválidos",
+		})
+	}
+
+	if request.AdmName == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "nome do administrador é obrigatorio",
+		})
+	}
+
+	if request.AdmLogin == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "login do administrador é obrigatorio",
+		})
+	}
+
 	admIDStr := c.Params("id")
 
 	admID, err := strconv.ParseInt(admIDStr, 10, 64)
@@ -75,42 +95,25 @@ func (ah *AdmHandler) Update(c fiber.Ctx) error {
 		})
 	}
 
-	_, err = ah.admService.GetByID(admID)
+	admData, err := ah.admService.GetByID(admID)
+
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": "administrador não encontrado",
 		})
 	}
 
-	admStatusStr := c.FormValue("adm_status")
-
-	admStatus, err := strconv.ParseBool(admStatusStr)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "adm_status inválido",
-		})
-	}
-
-	request := dto.AdmUpdateRequest{
-		AdmName:   c.FormValue("adm_name"),
-		AdmLogin:  c.FormValue("adm_login"),
-		AdmStatus: admStatus,
-	}
-
-	if request.AdmName == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "nome do administrador é obrigatorio",
-		})
-	}
-
 	updatedAt := time.Now()
 
 	adm := model.UserAdm{
-		AdmID:        admID,
+		AdmID:        admData.AdmID,
 		AdmName:      request.AdmName,
 		AdmLogin:     request.AdmLogin,
+		AdmPassword:  admData.AdmPassword,
 		AdmStatus:    request.AdmStatus,
+		AdmCreatedAt: admData.AdmCreatedAt,
 		AdmUpdatedAt: &updatedAt,
+		AdmLastLogin: admData.AdmLastLogin,
 	}
 
 	err = ah.admService.Update(adm)
@@ -122,7 +125,6 @@ func (ah *AdmHandler) Update(c fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(dto.ToAdmResponse(adm))
-
 }
 
 func (ah *AdmHandler) Delete(c fiber.Ctx) error {
